@@ -26,8 +26,8 @@
         <div class = "container">
             <div class="jumbotron mt-3">
          
-                <h1>화질구지 탈출 프로젝트(E19)</h1>
-                <A>저해상도 이미지를 입력하십시오. SRGAN이 당신의 사진을 고해상도 사진으로 업그레이드 시켜줄 것입니다.</A>
+                <h1>화질구지 탈출 프로젝트(E19)</h1><br />
+                <A>저해상도 이미지를 입력하십시오. SRGAN이 당신의 사진을 고해상도 사진으로 업그레이드 시켜줄 것입니다.</A><br />
                 <A>Git Hub repository : </A> <A href="https://github.com/byhankim/super_resolution_docker"> super_resolution_docker</A>
                 <br>
          
@@ -36,11 +36,9 @@
                 <div id="sampleBox">
                     <h2>Example</h2>
                     <figure>
-                        <img class="img" src="./images/aish.jpg" alt="sample_photo">
+                        <img class="img" src="../images/low-res.jpeg" alt="sample_photo">
                         <figcaption>저해상도 이미지 샘플입니다.</figcaption>
                     </figure>
-         
-         
                 </div>
                 <br>
                 <h2>Upload </h2>
@@ -51,13 +49,16 @@
                 </div>
          
                 <div id ='resultBox' style="margin-left: auto; margin-right: auto;">
-                    <p id='errorbox'></p><!-- p 대신 div로 바꿀것 -->
-                    <p id='result'></p>
+                    <p id='errorbox'></p>
+                    <!-- p 대신 div로 바꿀것 -->
+                    <!--<p id='result'></p>-->
+                    <img class="res_img" src="" alt="super resolution image">
                 </div>
                 <script>
                     document.getElementById("submit").onclick = () => {
                         var formData = new FormData();
                         var source = document.getElementById('source').files[0];
+                        var myImage = document.querySelector('res_img');
          
                         formData.append('source', source);
          
@@ -70,13 +71,14 @@
                         )
                         .then(response => {
                             if (response.status == 200) {
-                                return response.text();
+                                return response.blob();
                             }
                             else {
                                 throw Error("Loading image error");
                             }
-                        }).then(text => {
-                            document.getElementById('result').innerText = text;
+                        }).then(blob => {
+                            var objectURL = URL.createObjectURL(blob);
+                            myImage.src = objectURL;
                         }).catch(e =>{
                             document.getElementById("errorbox").innerHTML = e;
                         });

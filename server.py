@@ -1,9 +1,13 @@
 from flask import Flask, render_template, request, Response
 from PIL import Image
 
-from srgan import crop, preprocessing, model_load, apply_srgan, run_srgan
-# from image_preprocessor import preprocess
-# from mnist_mlp import load_keras_model, predict_number
+import numpy as np
+from numpy import asarray
+import matplotlib.pyplot as plt
+from tensorflow.keras import Input, Model
+
+from image_preprocess import crop, preprocessing
+from srgan import apply_srgan
 
 app = Flask(__name__, template_folder="./templates/", static_url_path="/images", static_folder="images")
 
@@ -17,18 +21,25 @@ def healthCheck():
 
 @app.route("/image", methods = ['POST'])
 def get_result():
-   if request.method == "POST":
-    #    width, height = 28, 28
-       try:
-           source = Image.open(request.files['source'])
-        #    adjusted_image = preprocess(source, width, height)
-        #    result = predict_number(model, adjusted_image, width, height)
-           result = "ss"
-       except Exception as e:
-           print("error : %s" % e)
-           return Response("fail", status=400)
+    if request.method == "POST":
+        try:
+        # ===================================================================
+        #       SRGAN project 1-2
+        #         - bicubic vs srgan
+        # ===================================================================
+    
+            lr = Image.open(request.files['source'])
+            lr = np.array(asarray(lr))
 
-   return str(result)
+            srgan_hr = apply_srgan(lr)
+
+            result = srgan_hr
+
+        except Exception as e:
+            print("error : %s" % e)
+            return Response("fail", status=400)
+        print("yes!")
+    return srgan_hr
 
 if __name__ == '__main__':
    app.run(host='0.0.0.0', port='80', debug=True)
