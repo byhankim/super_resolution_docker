@@ -1,0 +1,88 @@
+<HTML>
+    <head>
+ 
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+ 
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+            integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+ 
+        <title>Handwritten Number Reader</title>   
+ 
+        <style>
+            .img{
+                height: 250px;
+            }
+ 
+            figure{
+                display: inline-block;
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <div class = "container">
+            <div class="jumbotron mt-3">
+         
+                <h1>화질구지 탈출 프로젝트(E19)</h1>
+                <A>저해상도 이미지를 입력하십시오. SRGAN이 당신의 사진을 고해상도 사진으로 업그레이드 시켜줄 것입니다.</A>
+                <A>Git Hub repository : </A> <A href="https://github.com/byhankim/super_resolution_docker"> super_resolution_docker</A>
+                <br>
+         
+                <hr class="solid">
+         
+                <div id="sampleBox">
+                    <h2>Example</h2>
+                    <figure>
+                        <img class="img" src="./images/aish.jpg" alt="sample_photo">
+                        <figcaption>저해상도 이미지 샘플입니다.</figcaption>
+                    </figure>
+         
+         
+                </div>
+                <br>
+                <h2>Upload </h2>
+                <div id = 'inputImage'>
+                    <label for="source">저해상도 이미지를 업로드 해주세요 : </label>
+                    <input type = 'file' id = 'source' style="margin-right: 10px; margin-bottom: 10px;">
+                    <button id = "submit" type='submit' class="btn btn-primary btn-lg" style="margin-left: auto;"> Run </button>
+                </div>
+         
+                <div id ='resultBox' style="margin-left: auto; margin-right: auto;">
+                    <p id='errorbox'></p><!-- p 대신 div로 바꿀것 -->
+                    <p id='result'></p>
+                </div>
+                <script>
+                    document.getElementById("submit").onclick = () => {
+                        var formData = new FormData();
+                        var source = document.getElementById('source').files[0];
+         
+                        formData.append('source', source);
+         
+                        fetch(
+                            '/image',
+                            {
+                                method: 'POST',
+                                body: formData
+                            }
+                        )
+                        .then(response => {
+                            if (response.status == 200) {
+                                return response.text();
+                            }
+                            else {
+                                throw Error("Loading image error");
+                            }
+                        }).then(text => {
+                            document.getElementById('result').innerText = text;
+                        }).catch(e =>{
+                            document.getElementById("errorbox").innerHTML = e;
+                        });
+                    };
+                </script>
+            </div>
+         </div>
+    </body>
+ </HTML>
