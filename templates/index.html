@@ -52,13 +52,16 @@
                     <p id='errorbox'></p>
                     <!-- p 대신 div로 바꿀것 -->
                     <!--<p id='result'></p>-->
-                    <img class="res_img" src="" alt="super resolution image">
+                    <img id="res_img" src="images/low-res.jpeg" alt="super resolution image">
                 </div>
                 <script>
                     document.getElementById("submit").onclick = () => {
                         var formData = new FormData();
                         var source = document.getElementById('source').files[0];
-                        var myImage = document.querySelector('res_img');
+                        // var sample_img = document.getElementById('img')
+
+                        // var myImage = document.getElementById('res_img');
+                        // myImage.src = source
          
                         formData.append('source', source);
          
@@ -71,14 +74,16 @@
                         )
                         .then(response => {
                             if (response.status == 200) {
-                                return response.blob();
+                                return response.text();
                             }
                             else {
-                                throw Error("Loading image error");
+                                throw Error("\n\n\net error)))\n\nLoading image error\n\n\n\n");
                             }
-                        }).then(blob => {
-                            var objectURL = URL.createObjectURL(blob);
-                            myImage.src = objectURL;
+                        }).then(text => {
+                            // var objectURL = URL.createObjectURL(blob);
+
+                            // myImage.src = text;
+                            document.getElementById("res_img").src = "/" + text;
                         }).catch(e =>{
                             document.getElementById("errorbox").innerHTML = e;
                         });

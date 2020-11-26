@@ -1,7 +1,10 @@
-from flask import Flask, render_template, request, Response
+from flask import Flask, render_template, request, Response, send_file
 from PIL import Image
 
+import tensorflow as tf
+
 import numpy as np
+import io
 from numpy import asarray
 import matplotlib.pyplot as plt
 from tensorflow.keras import Input, Model
@@ -33,13 +36,25 @@ def get_result():
 
             srgan_hr = apply_srgan(lr)
 
-            result = srgan_hr
+            result = Image.fromarray(srgan_hr) # arr.astype("uint8")
+            path = "images/sr_" + request.files['source'].name + ".jpg"
+            result.save(path)
+
+
+            
+            # result.save(p)
+
+            # result = io.BytesIO()
+            # im.save(result, "JPG")
+            # result.seek(0)
 
         except Exception as e:
-            print("error : %s" % e)
+            print("error : %s EEEEEERRRRRORRRR" % e)
             return Response("fail", status=400)
-        print("yes!")
-    return srgan_hr
+        print("\n           YEEEEEEEEEEEEEEES            !\n\n", srgan_hr.shape)
+    return path
+    # return send_file(result, mimetype='image/JPG')
 
 if __name__ == '__main__':
    app.run(host='0.0.0.0', port='80', debug=True)
+#    app.run(debug=True)

@@ -11,7 +11,7 @@ from image_preprocess import crop, preprocessing
 
 def apply_srgan(image):
     # model load
-    srgan = tf.keras.models.load_model("./model/srgan_G.h5")
+    srgan = tf.keras.models.load_model("./model/srgan_G.h5", compile=False)
 
     image = tf.cast(image[np.newaxis, ...], tf.float32)
     sr = srgan.predict(image)
